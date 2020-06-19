@@ -1,9 +1,12 @@
-import { Controller, Get, InternalServerErrorException, UseFilters } from '@nestjs/common';
+import { Controller, Get, InternalServerErrorException, UseFilters, Post, UsePipes, Body } from '@nestjs/common';
 import { Crud } from '@nestjsx/crud';
 import { ApiTags } from '@nestjs/swagger';
 import { TasksService } from './tasks.service';
 import { Tasks } from './tasks.entity';
-import { AllTasksExceptionsFilter } from '../common/filters/tasks.filter'
+import { AllTasksExceptionsFilter } from '../common/filters/tasks.filter';
+import { TasksPipe } from './tasks.pipe';
+import { createOtherRouterSchema } from './schemas/createOhertTask.schema';
+import { CreateOtherRouteDto } from './dto/create-other-route.dto';
 
 @Crud({
   model: {
@@ -20,5 +23,16 @@ export class TasksController {
   @UseFilters(new AllTasksExceptionsFilter())
   getOtherRouter() {
     throw new InternalServerErrorException();
+  }
+
+  // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
+  @Post('/otherRoute')
+  @UsePipes(new TasksPipe(createOtherRouterSchema))
+  // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
+  createOtherRouter(@Body() createOtherRouter: CreateOtherRouteDto) {
+    // llamadas a los servicios
+    console.log("data transformada: ", createOtherRouter)
+    this.service.modfyDataBD(createOtherRouter)
+    return createOtherRouter;
   }
 }

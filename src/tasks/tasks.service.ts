@@ -8,4 +8,9 @@ export class TasksService extends TypeOrmCrudService<Tasks>{
   constructor(@InjectRepository(Tasks) repo) {
     super(repo);
   }
+
+  modfyDataBD(data: any){
+    // almacenan bd
+    // adadadadad 
+  }
 }
