@@ -5,7 +5,8 @@ import {
   UsePipes, 
   Body, 
   UseInterceptors, 
-  Request 
+  Request,
+  UseGuards
 } from '@nestjs/common';
 import { Crud } from '@nestjsx/crud';
 import { ApiTags } from '@nestjs/swagger';
@@ -15,6 +16,8 @@ import { TasksPipe } from './tasks.pipe';
 import { createOtherRouterSchema } from './schemas/createOhertTask.schema';
 import { CreateOtherRouteDto } from './dto/create-other-route.dto';
 import { TasksInterceptor } from './tasks.interceptor';
+import { RolesGuard } from '../common/guards/roles.guard';
+import { Roles } from '../common/decorators/roles.decorator';
 
 @Crud({
   model: {
@@ -24,10 +27,12 @@ import { TasksInterceptor } from './tasks.interceptor';
 @ApiTags('Tasks')
 @UseInterceptors(new TasksInterceptor())
 @Controller('tasks')
+@UseGuards(RolesGuard)
 export class TasksController {
   constructor(public service: TasksService) {}
 
   @Get('/otherRoute')
+  @Roles('provider', 'admin')
   getOtherRouter() {
     return "data"
   }
